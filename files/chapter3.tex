@@ -45,21 +45,9 @@ Riassumendo, possiamo dire che oggi i firewall servono poco perché gli attacchi
 \shellcmd{iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT}
 accetta i pacchetti in arrivo sulla porta 80 (protocollo TCP); \texttt{-t filter} consente di specificare la tabella da considerare (se omesso, di default viene considerata la tabella \texttt{filter}), \texttt{-A INPUT} aggiunge una regola sul traffico in ricezione (catena), \texttt{--dport 80} criterio di match della regola, \texttt{-j ACCEPT} accetta.
 
-Le regole sono organizzate in catene e tabelle: una catena identifica il punto all'interno del percorso nel kernel in cui avviene il filtraggio, mentre una tabella associa una funzione alla regola. Un firewall è un host a tutti gli effetti, con almeno due schede di rete, ognuna delle quali possiede un indirizzo IP. I pacchetti possono arrivare su una delle schede, essere filtrati ed essere inoltrati sull'altra (forwarding); se un pacchetto ricevuto dalla prima scheda è diretto all'IP di quella scheda, il pacchetto verrà elaborato in locale, dunque non vi è forwarding. Il firewall può inoltre generare dei pacchetti, che vengono inviati all'esterno verso altri IP su una delle due schede.
+Le regole sono organizzate in catene e tabelle: una catena identifica il punto all'interno del percorso nel kernel in cui avviene il filtraggio, mentre una tabella associa una funzione alla regola. Un firewall è un host a tutti gli effetti, con almeno due schede di rete, ognuna delle quali possiede un indirizzo IP. I pacchetti possono arrivare su una delle schede, essere filtrati ed essere inoltrati sull'altra (forwarding); se un pacchetto ricevuto dalla prima scheda è diretto all'IP di quella scheda, il pacchetto verrà elaborato in locale, dunque non vi sarà forwarding. Il firewall può inoltre generare dei pacchetti, che vengono inviati all'esterno verso altri IP su una delle due schede.
 \begin{figure}[htbp]
 	\centering
-%	\begin{tikzpicture}[node distance=2cm]
-%		\node (reteA) [rect] {Rete A};
-%		\node (routing) [draw, diamond, aspect=2, below of=reteA] {Routing};
-%		\node (localhost1) [rect,right of=reteA, xshift=3cm] {Localhost};
-%		\node (localhost2) [rect,below of=routing, xshift=-2cm] {Localhost};
-%		\node (reteB) [rect,below of=routing, xshift=2cm] {Rete B};	
-%		
-%		\draw [arrow] (reteA) -- (routing);
-%		\draw [arrow] ($(routing.south west)$) -- (localhost2);
-%		\draw [arrow] ($(routing.south east)$) -- (reteB);
-%		\draw [arrow] (localhost1) -- ($(routing.south east)!0.5!(reteB.north)$); 
-%	\end{tikzpicture}
 	\includegraphics[scale = 0.4]{images/firewall-logic-scheme}
 	\caption{Schema logico del firewall.}
 	\label{img:schema-logico-firewall}
@@ -99,7 +87,7 @@ Il modulo di \textit{Conntrack} svolge alcune funzioni fondamentali nell'azione 
 	\caption{Esempio di tentativo di connessione ad un host della rete interna con porta di destinazione superiore di 1024.}
 	\label{img:conntrack-example}
 \end{figure}\\
-Nell'esempio riportato in Figura \ref{img:conntrack-example} siamo in uno scenario in cui viene effettuata una richiesta di connessione su una porta maggiore di 1024 ad un host della rete interna. Come poter distinguere i pacchetti 1 e 2 attraverso Conntrack? L'idea di verificare in base al tipo di pacchetto (SYN) non è conveniente, poiché il problema non verrebbe risolto per altri protocolli (e.g. UDP). Si nota però che esiste una differenza fondamentale: il pacchetto 1 viene ricevuto dopo aver inviato un pacchetto in uscita, mentre il pacchetto 2 invece inizia la connessione. Il modulo conntrack tiene traccia di queste associazioni. Ogni pacchetto di qualsiasi tipo (UDP, TCP) viene inserito in una\textit{connessione} che può trovarsi in quattro stati:
+Nell'esempio riportato in Figura \ref{img:conntrack-example} siamo in uno scenario in cui viene effettuata una richiesta di connessione su una porta maggiore di 1024 ad un host della rete interna. Come poter distinguere i pacchetti 1 e 2 attraverso Conntrack? L'idea di verificare in base al tipo di pacchetto (SYN) non è conveniente, poiché il problema non verrebbe risolto per altri protocolli (e.g. UDP). Si nota però che esiste una differenza fondamentale: il pacchetto 1 viene ricevuto dopo aver inviato un pacchetto in uscita, mentre il pacchetto 2 invece inizia la connessione. Il modulo conntrack tiene traccia di queste associazioni. Ogni pacchetto di qualsiasi tipo (UDP, TCP) viene inserito in una \textit{connessione} che può trovarsi in quattro stati:
 \begin{itemize}
 	\item \textbf{NEW}. Il kernel ha visto passare pacchetti in una sola direzione.
 	\item \textbf{ESTABLISHED}. Il kernel ha visto passare traffico in entrambe le direzioni.
