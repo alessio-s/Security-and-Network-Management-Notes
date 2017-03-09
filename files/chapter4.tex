@@ -83,11 +83,11 @@ Vediamo adesso una classificazione più precisa del binding, ossia di come può 
 \begin{itemize}
 	\item \textbf{Endpoint independent}. Il NAT riusa il binding per tutte le sessioni provenienti dallo stesso IP/porta, l'IP/porta esterno non è valutato; è come un \textit{Full Cone NAT}.
 	
-	\item \textbf{Endpoint address dependent}. Il NAT riusa il binding per tutte le sessioni provenienti dalla stesso IP/porta verso lo stesso IP esterno (la porta non si considera); è come un \textit{Restricted Cone NAT}.
+	\item \textbf{Endpoint address dependent}. Il NAT riusa il binding per tutte le sessioni provenienti dallo stesso IP/porta verso lo stesso IP esterno (la porta non si considera); è come un \textit{Restricted Cone NAT}.
 	
 	\item \textbf{Endpoint address and port dependent}. Si utilizza la quintupla $$\{\text{protocollo, IP sorgente, porta sorgente, IP destinazione, porta destinazione}\},$$ cioè si riutilizza lo stesso mapping per tutti i pacchetti inviati ai medesimi IP/porta esterni; è come un \textit{Symmetric NAT}.
 	
-	\item \textbf{Endpoint port dependent}. Il NAT riusa il binding per tutte le sessioni provenienti dalla stesso IP/porta verso la stessa porta esterna (l'IP non si considera); è come un \textit{Port Restricted Cone NAT}.
+	\item \textbf{Endpoint port dependent}. Il NAT riusa il binding per tutte le sessioni provenienti dallo stesso IP/porta verso la stessa porta esterna (l'IP non si considera); è come un \textit{Port Restricted Cone NAT}.
 \end{itemize}
 Il port binding lo possiamo suddividere in tre categorie:
 \begin{itemize}
